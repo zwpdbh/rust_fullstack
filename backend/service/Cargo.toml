@@ -1,0 +1,34 @@
+[package]
+name = "service"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+entity = { path = "../entity" }
+sea-orm = { version = "0.12", features = [
+    "sqlx-postgres",
+    "runtime-tokio-rustls",
+    # "macros",
+    # "with-uuid",
+    # "with-chrono",
+    # "with-json",
+    # "with-bigdecimal",
+    "debug-print",
+    "mock",
+] }
+
+[dev-dependencies]
+tokio = { version = "1.32.0", features = ["full"] }
+
+# The [features] section defines conditional compilation features for your crate.
+[features]
+mock = ["sea-orm/mock"]
+
+# The [[test]] sections define individual integration test targets. Each section specifies a separate test target and its required features.
+[[test]]
+name = "user"
+required-features = ["mock"]
+
+[[test]]
+name = "acstor"
+required-features = ["mock"]
