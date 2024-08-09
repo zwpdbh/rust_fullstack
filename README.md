@@ -1,4 +1,4 @@
-# How to Build a Powerful GraphQL API with Rust
+# How to Build fullstack with Rust 
 
 ## Show installed rust versions
 
@@ -68,3 +68,7 @@ You can also directly edit the `.git/config` file in your project directory to a
 ### Summary
 
 By setting your Git configuration locally, you ensure that these settings apply only to your specific project, allowing you to customize behavior on a per-project basis. Use the `git config --local` command to set these configurations, or edit the `.git/config` file directly for more advanced setups.
+
+## References
+
+- [Dioxus real world example](https://github.com/dxps/fullstack-rust-axum-dioxus-rwa)
