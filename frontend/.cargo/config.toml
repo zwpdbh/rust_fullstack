@@ -1,0 +1,21 @@
+# If `cargo build` got stuck, try `rm -rf ~/.cargo/.package-cache` and `rustup update`.
+# Then, rerun `cargo build`.
+
+[source.crates-io]
+replace-with = 'rsproxy-sparse'
+
+[source.rsproxy]
+registry = "https://rsproxy.cn/crates.io-index"
+
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+
+[env]
+RUSTUP_DIST_SERVER = "https://rsproxy.cn"
+RUSTUP_UPDATE_ROOT = "https://rsproxy.cn/rustup"
+
+[net]
+git-fetch-with-cli = true

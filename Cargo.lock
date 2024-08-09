@@ -1183,6 +1183,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "dioxus-frontend"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "dioxus",
+ "dioxus-free-icons",
+ "dioxus-logger",
+ "futures-util",
+ "gloo-timers 0.3.0",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tracing",
+]
+
+[[package]]
 name = "dioxus-fullstack"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1600,22 +1616,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e13624c2627564efccf4934284bdd98cbaa14e79b0b5a141218e507b3a823456"
 dependencies = [
  "percent-encoding",
-]
-
-[[package]]
-name = "frontend"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "dioxus",
- "dioxus-free-icons",
- "dioxus-logger",
- "futures-util",
- "gloo-timers 0.3.0",
- "reqwest",
- "serde",
- "serde_json",
- "tracing",
 ]
 
 [[package]]
