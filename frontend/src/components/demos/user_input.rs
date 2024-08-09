@@ -1,4 +1,3 @@
-#![allow(non_snake_case)]
 use super::MyCard;
 use dioxus::prelude::*;
 use dioxus_free_icons::icons::fa_brands_icons::FaGithub;

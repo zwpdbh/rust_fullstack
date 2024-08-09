@@ -11,6 +11,7 @@ serde = { version = "^1.0", features = ["derive"] }
 serde_json = { version = "^1.0" }
 chrono = "0.4.38"
 dioxus = { version = "0.5", features = ["web", "router"] }
+# dioxus-use-storage = "0.3.1"
 dioxus-free-icons = { version = "0.8.0", features = [
   "font-awesome-brands",
   "bootstrap",

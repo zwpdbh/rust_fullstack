@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+
 use crate::routes::Route;
 use dioxus::prelude::*;
 

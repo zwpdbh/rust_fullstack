@@ -1,4 +1,3 @@
-#![allow(non_snake_case)]
 use super::MyCard;
 use dioxus::prelude::*;
 use dioxus_logger::tracing::info;

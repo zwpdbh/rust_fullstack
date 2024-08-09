@@ -1,10 +1,11 @@
 #![allow(non_snake_case)]
-
 use dioxus::prelude::*;
 use routes::Route;
 use tracing::Level;
 
+mod commons;
 mod components;
+mod pages;
 mod routes;
 
 fn App() -> Element {

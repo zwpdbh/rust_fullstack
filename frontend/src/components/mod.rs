@@ -1,4 +1,3 @@
-#![allow(non_snake_case)]
 pub use blog::*;
 pub use demos::async_with_coroutines::DemoCoroutines;
 pub use demos::async_with_resource::DemoResource;
@@ -17,7 +16,10 @@ pub use navbar::NavBar;
 
 mod blog;
 mod demos;
+mod form;
 mod navbar;
+
+pub use form::*;
 
 #[component]
 pub fn Home() -> Element {
