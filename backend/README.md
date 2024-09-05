@@ -1,6 +1,6 @@
 # Axum + SQLx + GraphQL 
 
-## First, build the Axum backend API with SQLx 
+## RESTful API built with Axum + SQLx
 
 ### Setup DB 
 
@@ -10,7 +10,7 @@
 - [Rust Axum Full Course - Web Development (GitHub repo updated to Axum 0.7)](https://www.youtube.com/watch?v=XZtlD_m59sM)
 - [SQLx is my favorite PostgreSQL driver to use with Rust.](https://www.youtube.com/watch?v=TCERYbgvbq0&t=185s)
 
-## Second, add GraphQl on existing API 
+## Add GraphQl API
 
 ### References 
 
