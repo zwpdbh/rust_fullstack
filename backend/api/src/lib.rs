@@ -1,28 +1,13 @@
-mod db;
-mod graphql;
-use entity::async_graphql;
-
-use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
-
-use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
-use axum::extract::State;
+use axum::response::IntoResponse;
 use axum::routing::get;
 use axum::Router;
 use axum::{http::StatusCode, Json};
-use axum::{middleware, Server};
-use axum::{
-    // extract::Extension,
-    response::{Html, IntoResponse},
-};
-use graphql::schema::{build_schema, AppSchema};
 use lazy_static::lazy_static;
 use serde::Serialize;
 use std::env;
-use std::future::ready;
+use std::net::SocketAddr;
 use tokio::signal;
-use tracer::opentelemetry::trace::TraceContextExt;
-use tracer::tracing_opentelemetry::OpenTelemetrySpanExt;
-use tracer::{info, span, Instrument, Level};
+use tracer::info;
 
 lazy_static! {
     static ref DATABASE_URL: String =
@@ -36,36 +21,6 @@ lazy_static! {
         });
 }
 
-pub async fn graphql_playground() -> impl IntoResponse {
-    Html(playground_source(
-        GraphQLPlaygroundConfig::new("/graphql").subscription_endpoint("/ws"),
-    ))
-}
-
-pub async fn graphql_handler(
-    // Extension(schema): Extension<AppSchema>,
-    schema: State<AppSchema>,
-    req: GraphQLRequest,
-) -> GraphQLResponse {
-    let span = span!(Level::INFO, "graphql_execution");
-    info!("Processing GraphQL request");
-
-    let response = async move { schema.execute(req.into_inner()).await }
-        .instrument(span.clone())
-        .await;
-    info!("Processing GraphQL request finished");
-
-    response
-        .extension(
-            "traceId",
-            async_graphql::Value::String(format!(
-                "{}",
-                span.context().span().span_context().trace_id()
-            )),
-        )
-        .into()
-}
-
 #[derive(Serialize)]
 struct Health {
     healthy: bool,
@@ -77,6 +32,7 @@ pub(crate) async fn health() -> impl IntoResponse {
     (StatusCode::OK, Json(health))
 }
 
+#[allow(unused)]
 async fn shutdown_signal() {
     let ctrl_c = async {
         signal::ctrl_c()
@@ -103,27 +59,14 @@ async fn shutdown_signal() {
     tracer::opentelemetry::global::shutdown_tracer_provider();
 }
 
-pub async fn run(port: i32) {
-    let schema = build_schema().await;
-
-    let prometheus_recorder = tracer::observability::metrics::create_prometheus_recorder();
-
-    let address = format!("0.0.0.0:{}", port);
+pub async fn run(port: u16) {
+    let address = SocketAddr::from(([127, 0, 0, 1], port));
     info!("Service starting at address: {}", address);
 
-    let app = Router::new()
-        .route("/", get(health))
-        .route("/graphql", get(graphql_playground).post(graphql_handler))
-        .route("/metrics", get(move || ready(prometheus_recorder.render())))
-        .route_layer(middleware::from_fn(
-            tracer::observability::metrics::track_metrics,
-        ))
-        .with_state(schema);
-    // .layer(Extension(schema));
+    let app = Router::new().route("/", get(health));
 
-    Server::bind(&address.parse().unwrap())
+    axum_server::bind(address)
         .serve(app.into_make_service())
-        .with_graceful_shutdown(shutdown_signal())
         .await
         .unwrap();
 }

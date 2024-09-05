@@ -1,10 +1,4 @@
 [workspace]
 resolver = "2"
 
-members = [
-  "backend/tracer",
-  "backend/migration",
-  "backend/entity",
-  "backend/service",
-  "backend/api", "frontend",
-]
+members = ["backend/tracer", "backend/api", "frontend"]
