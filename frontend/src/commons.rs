@@ -7,6 +7,7 @@ pub struct AppState {
 }
 
 impl AppState {
+    #[allow(unused)]
     pub fn new() -> Self {
         Self { token: None }
     }
