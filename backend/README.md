@@ -7,6 +7,7 @@
 ### Implement migration 
 
 ### References
+- [axum docs](https://docs.rs/axum/latest/axum/)
 - [Rust Axum Full Course - Web Development (GitHub repo updated to Axum 0.7)](https://www.youtube.com/watch?v=XZtlD_m59sM)
 - [SQLx is my favorite PostgreSQL driver to use with Rust.](https://www.youtube.com/watch?v=TCERYbgvbq0&t=185s)
 
