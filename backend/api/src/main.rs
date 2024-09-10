@@ -59,8 +59,9 @@ async fn shutdown_signal() {
     tracer::opentelemetry::global::shutdown_tracer_provider();
 }
 
-pub async fn run(port: u16) {
-    let address = SocketAddr::from(([127, 0, 0, 1], port));
+#[tokio::main]
+async fn main() {
+    let address = SocketAddr::from(([127, 0, 0, 1], 3000));
     info!("Service starting at address: {}", address);
 
     let app = Router::new().route("/", get(health));
