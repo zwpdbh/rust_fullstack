@@ -2,12 +2,17 @@ use axum::response::IntoResponse;
 use axum::routing::get;
 use axum::Router;
 use axum::{http::StatusCode, Json};
+
+use db::setup_db;
 use lazy_static::lazy_static;
 use serde::Serialize;
 use std::env;
+use std::error::Error;
 use std::net::SocketAddr;
 use tokio::signal;
 use tracer::info;
+pub mod command_line;
+pub mod db;
 
 lazy_static! {
     static ref DATABASE_URL: String =
@@ -59,15 +64,38 @@ async fn shutdown_signal() {
     tracer::opentelemetry::global::shutdown_tracer_provider();
 }
 
-#[tokio::main]
-async fn main() {
-    let address = SocketAddr::from(([127, 0, 0, 1], 3000));
+async fn run(port: u16) -> Result<(), Box<dyn Error>> {
+    let address = SocketAddr::from(([127, 0, 0, 1], port));
     info!("Service starting at address: {}", address);
 
     let app = Router::new().route("/", get(health));
-
-    axum_server::bind(address)
+    let _ = axum_server::bind(address)
         .serve(app.into_make_service())
-        .await
-        .unwrap();
+        .await?;
+
+    Ok(())
+}
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    use crate::command_line::Arguments;
+    use crate::command_line::ExCase;
+    use clap::Parser;
+    use command_line::SubCommand;
+
+    let args = Arguments::parse();
+    match args.cmd {
+        SubCommand::Serve { port } => {
+            let _ = run(port).await.unwrap();
+        }
+        SubCommand::Sql { case } => match case {
+            ExCase::Migrate => {
+                let db = setup_db().await?;
+                let _ = sqlx::migrate!("./migrations").run(&db).await?;
+            }
+            ExCase::Case01 { name } => {
+                println!("name: {}", name)
+            }
+        },
+    }
+    Ok(())
 }
