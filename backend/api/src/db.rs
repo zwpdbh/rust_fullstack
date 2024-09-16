@@ -1,5 +1,6 @@
 use sqlx::Pool;
 use sqlx::Postgres;
+
 use std::error::Error;
 
 pub async fn setup_db() -> Result<Pool<Postgres>, Box<dyn Error>> {
@@ -15,6 +16,8 @@ pub async fn setup_db() -> Result<Pool<Postgres>, Box<dyn Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use sqlx::Row;
+    use tokio::task;
 
     pub async fn test_db_setup() {
         let db = setup_db().await.unwrap();

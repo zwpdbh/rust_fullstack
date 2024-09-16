@@ -10,7 +10,7 @@ use std::env;
 use std::error::Error;
 use std::net::SocketAddr;
 use tokio::signal;
-use tracer::info;
+use tracer::{info, setup_tracer};
 pub mod command_line;
 pub mod db;
 
@@ -75,6 +75,7 @@ async fn run(port: u16) -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     use crate::command_line::Arguments;
@@ -82,15 +83,17 @@ async fn main() -> Result<(), Box<dyn Error>> {
     use clap::Parser;
     use command_line::SubCommand;
 
+    let _ = setup_tracer("info");
     let args = Arguments::parse();
     match args.cmd {
         SubCommand::Serve { port } => {
             let _ = run(port).await.unwrap();
         }
         SubCommand::Sql { case } => match case {
-            ExCase::Migrate => {
+            ExCase::MigrateBookstore => {
                 let db = setup_db().await?;
-                let _ = sqlx::migrate!("./migrations").run(&db).await?;
+                let _ = sqlx::migrate!("./migrations/bookstore").run(&db).await?;
+                info!("migration bookstore succeed");
             }
             ExCase::Case01 { name } => {
                 println!("name: {}", name)

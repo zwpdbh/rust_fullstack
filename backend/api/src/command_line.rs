@@ -25,5 +25,5 @@ pub enum ExCase {
         #[arg(short, long)]
         name: String,
     },
-    Migrate,
+    MigrateBookstore,
 }

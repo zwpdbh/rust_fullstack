@@ -54,13 +54,13 @@ fn get_jaeger_config_from_env() -> JaegerConfig {
     }
 }
 
-pub fn setup_tracer() {
+pub fn setup_tracer(event_filter: &str) {
     use tracing_subscriber::filter::EnvFilter;
     use tracing_subscriber::layer::SubscriberExt;
     use tracing_subscriber::util::SubscriberInitExt;
     use tracing_subscriber::Layer;
     use tracing_subscriber::Registry;
-    let filter = EnvFilter::new("debug");
+    let filter = EnvFilter::new(event_filter);
 
     let registry = Registry::default().with(
         tracing_subscriber::fmt::layer()
