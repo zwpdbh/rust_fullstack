@@ -3,7 +3,6 @@ use axum::routing::get;
 use axum::Router;
 use axum::{http::StatusCode, Json};
 
-use db::setup_db;
 use lazy_static::lazy_static;
 use serde::Serialize;
 use std::env;
@@ -13,6 +12,7 @@ use tokio::signal;
 use tracer::{info, setup_tracer};
 pub mod command_line;
 pub mod db;
+pub mod models;
 
 lazy_static! {
     static ref DATABASE_URL: String =
@@ -79,26 +79,11 @@ async fn run(port: u16) -> Result<(), Box<dyn Error>> {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     use crate::command_line::Arguments;
-    use crate::command_line::ExCase;
     use clap::Parser;
-    use command_line::SubCommand;
-
     let _ = setup_tracer("info");
+
     let args = Arguments::parse();
-    match args.cmd {
-        SubCommand::Serve { port } => {
-            let _ = run(port).await.unwrap();
-        }
-        SubCommand::Sql { case } => match case {
-            ExCase::MigrateBookstore => {
-                let db = setup_db().await?;
-                let _ = sqlx::migrate!("./migrations/bookstore").run(&db).await?;
-                info!("migration bookstore succeed");
-            }
-            ExCase::Case01 { name } => {
-                println!("name: {}", name)
-            }
-        },
-    }
+    let _ = command_line::process(args).await?;
+
     Ok(())
 }
