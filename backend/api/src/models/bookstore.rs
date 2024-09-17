@@ -1,4 +1,4 @@
-use sqlx::{pool, FromRow};
+use sqlx::FromRow;
 use sqlx::{Postgres, Transaction};
 use std::error::Error;
 
